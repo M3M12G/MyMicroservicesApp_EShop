@@ -19,3 +19,29 @@ services:
             - ${HOME}/.aspnet/https:/root/.aspnet/https/
         ports:
             - "8000:80"
+    basketdb:
+        container_name: basketdb
+        restart: always
+        ports:
+            - "6379:6379"
+        volumes:
+            - ${WEBAPP_STORAGE_HOME}/site:/data/db
+    rabbitmq:
+        container_name: rabbitmq
+        restart: always
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+    basket.api:
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - "ConnectionStrings:Redis=basketdb:6379"
+            - "EventBus:HostName=rabbitmq"
+        ports:
+            - "8001:80"
+        depends_on:
+            - basketdb
+            - rabbitmq
+        volumes:
+            - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
+            - ${HOME}/.aspnet/https:/root/.aspnet/https/
