@@ -15,9 +15,10 @@ namespace Ordering.Infrastructure.Repositories
         {
         }
 
+        //Task 2. -> OrderRepository:GetOrdersByUsername - completed
         public async Task<IEnumerable<Order>> GetOrdersByUsername(string username)
         {
-            throw new NotImplementedException();
+            return await this.GetAsync(o => o.Username.Equals(username));
         }
     }
 }

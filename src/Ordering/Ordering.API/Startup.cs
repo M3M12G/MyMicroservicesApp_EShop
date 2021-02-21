@@ -1,3 +1,4 @@
+using EventBusRabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -6,11 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Ordering.API.Extensions;
+using Ordering.API.RabbitMQ;
 using Ordering.Core.Repositories;
 using Ordering.Core.Repositories.Base;
 using Ordering.Infrastructure.Data;
 using Ordering.Infrastructure.Repositories;
 using Ordering.Infrastructure.Repositories.Base;
+using RabbitMQ.Client;
 
 namespace Ordering.API
 {
@@ -37,7 +40,20 @@ namespace Ordering.API
             #endregion
 
             #region RabbitMQ Dependencies
+            //Task 4. -> Startup:"RabbitMQ Dependencies" - completed
+            services.AddSingleton<IRabbitMQConnection>(s => {
+                var factory = new ConnectionFactory()
+                {
+                    HostName = Configuration["EventBus:HostName"]
+                };
 
+                factory.UserName = Configuration["EventBus:Username"];
+                factory.Password = Configuration["EventBus:Password"];
+
+                return new RabbitMQConnection(factory);
+            });
+
+            services.AddSingleton<EventBusRabbitMQConsumer>();
             #endregion
 
             #region Swagger Dependencies

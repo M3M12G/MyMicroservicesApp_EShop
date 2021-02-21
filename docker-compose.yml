@@ -16,5 +16,15 @@ services:
     build:
       context: .
       dockerfile: src/Basket/Basket.API/Dockerfile
+  
   rabbitmq:
     image: rabbitmq:3-management-alpine
+
+  orderingdb:
+    image: postgres
+
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}orderingapi
+    build:
+      context: .
+      dockerfile: src/Ordering/Ordering.API/Dockerfile

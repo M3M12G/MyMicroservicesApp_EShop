@@ -8,6 +8,7 @@ services:
             - ${WEBAPP_STORAGE_HOME}/site:/data/db
         ports:
             - "27017:27017"
+
     catalog.api:
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
@@ -19,6 +20,7 @@ services:
             - ${HOME}/.aspnet/https:/root/.aspnet/https/
         ports:
             - "8000:80"
+
     basketdb:
         container_name: basketdb
         restart: always
@@ -26,12 +28,16 @@ services:
             - "6379:6379"
         volumes:
             - ${WEBAPP_STORAGE_HOME}/site:/data/db
+
     rabbitmq:
+        hostname: rabbitmq
+        image: rabbitmq:3-management-alpine
         container_name: rabbitmq
         restart: always
         ports:
             - "5672:5672"
             - "15672:15672"
+
     basket.api:
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
@@ -44,4 +50,28 @@ services:
             - rabbitmq
         volumes:
             - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
+            - ${HOME}/.aspnet/https:/root/.aspnet/https/
+
+    orderingdb:
+        image: postgres
+        container_name: orderingdb
+        restart: always
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: app@con123
+            POSTGRES_DB: OrderDb
+        ports:
+            - "5432:5432"
+
+    ordering.api:
+        depends_on:
+            - orderingdb
+            - rabbitmq
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - "ConnectionStrings:DefaultConnection=Server=orderingdb;Port=5432;Database=OrderDb;Username=postgres;Password=app@con123"
+            - "EventBus:HostName=rabbitmq"
+        ports:
+            - "5001:80"
+        volumes:
             - ${HOME}/.aspnet/https:/root/.aspnet/https/
