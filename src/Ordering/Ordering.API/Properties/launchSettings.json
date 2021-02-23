@@ -20,7 +20,7 @@
     "Ordering.API": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/v1/order",
+      "launchUrl": "api/v1/Order",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

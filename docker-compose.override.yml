@@ -75,3 +75,17 @@ services:
             - "5001:80"
         volumes:
             - ${HOME}/.aspnet/https:/root/.aspnet/https/
+    ocelotapigateway:
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+        container_name: apigateway
+        depends_on:
+            - catalog.api
+            - basket.api
+            - ordering.api
+        volumes:
+            - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
+            - ${HOME}/.aspnet/https:/root/.aspnet/https/
+        ports:
+            - "7000:80"
+
