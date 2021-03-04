@@ -34,3 +34,10 @@ services:
       context: .
       dockerfile: src/APIGateway/OcelotAPIGateway/Dockerfile
 
+
+  shoppingweb:
+    image: ${DOCKER_REGISTRY-}shoppingweb
+    build:
+      context: .
+      dockerfile: src/Web/ShoppingWeb/Dockerfile
+
