@@ -11,7 +11,6 @@ namespace ShoppingWeb.Pages
     {
         private readonly IBasketApi _basketApi;
         private readonly IOrderingApi _orderApi;
-
         public CheckOutModel(IBasketApi basketApi, IOrderingApi orderApi)
         {
             _basketApi = basketApi ?? throw new ArgumentNullException(nameof(basketApi));
@@ -20,8 +19,7 @@ namespace ShoppingWeb.Pages
 
         [BindProperty]
         public Order Order { get; set; }
-
-        public Cart Cart { get; set; } = new Cart();
+        public Cart Cart { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -42,7 +40,7 @@ namespace ShoppingWeb.Pages
             Order.TotalPrice = Cart.TotalPrice;
 
             await _orderApi.Checkout(Order);
-            await _basketApi.DeleteCart("test");
+            await _basketApi.DeleteCart(Cart.Username);
             
             return RedirectToPage("Confirmation", "OrderSubmitted");
         }       

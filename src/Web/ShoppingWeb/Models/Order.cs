@@ -20,14 +20,7 @@
         public string CardNumber { get; set; }
         public string Expiration { get; set; }
         public string CVV { get; set; }
-        public PaymentMethod PaymentMethod { get; set; }
+        public int PaymentMethod { get; set; }
         #endregion
-    }
-
-    public enum PaymentMethod
-    {
-        CreditCard = 1,
-        DebitCard = 2,
-        Paypal = 3
     }
 }

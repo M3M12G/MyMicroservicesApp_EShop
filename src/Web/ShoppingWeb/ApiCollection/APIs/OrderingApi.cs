@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using ShoppingWeb.API.Infrastructure;
 using ShoppingWeb.ApiCollection.Infrastructure;
 using ShoppingWeb.ApiCollection.Interfaces;
 using ShoppingWeb.ApiCollection.Settings;

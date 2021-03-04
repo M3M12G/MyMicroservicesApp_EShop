@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using ShoppingWeb.API.Infrastructure;
 using ShoppingWeb.ApiCollection.Infrastructure;
 using ShoppingWeb.ApiCollection.Interfaces;
 using ShoppingWeb.ApiCollection.Settings;
@@ -11,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace ShoppingWeb.ApiCollection.APIs
 {
-    public class ProductApi : BaseHttpClientWithFactory, IProductApi
+    public class CatalogApi : BaseHttpClientWithFactory, ICatalogApi
     {
         private IApiSettings _settings;
-        public ProductApi(IHttpClientFactory factory, IApiSettings settings) : base(factory)
+        public CatalogApi(IHttpClientFactory factory, IApiSettings settings) : base(factory)
         {
             _settings = settings;
             _builder = new HttpRequestBuilder(_settings.BaseAddress);

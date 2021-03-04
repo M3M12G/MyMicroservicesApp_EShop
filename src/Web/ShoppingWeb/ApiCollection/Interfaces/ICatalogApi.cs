@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ShoppingWeb.ApiCollection.Interfaces
 {
-    public interface IProductApi
+    public interface ICatalogApi
     {
         Task<IEnumerable<Product>> GetProducts();
         Task<Product> GetProduct(string id);

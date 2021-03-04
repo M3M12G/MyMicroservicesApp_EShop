@@ -10,20 +10,20 @@ namespace ShoppingWeb.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly IProductApi _productApi;
+        private readonly ICatalogApi _catalogApi;
         private readonly IBasketApi _basketApi;
 
-        public IndexModel(IProductApi productApi, IBasketApi basketApi)
+        public IndexModel(IBasketApi basketApi, ICatalogApi catalogApi)
         {
-            _productApi = productApi ?? throw new ArgumentNullException(nameof(productApi));
             _basketApi = basketApi ?? throw new ArgumentNullException(nameof(basketApi));
+            _catalogApi = catalogApi ?? throw new ArgumentNullException(nameof(catalogApi)); ;
         }
 
         public IEnumerable<Product> ProductList { get; set; } = new List<Product>();
 
         public async Task<IActionResult> OnGetAsync()
         {
-            ProductList = await _productApi.GetProducts();
+            ProductList = await _catalogApi.GetProducts();
             return Page();
         }
 
@@ -31,9 +31,11 @@ namespace ShoppingWeb.Pages
         {
             //if (!User.Identity.IsAuthenticated)
             //    return RedirectToPage("./Account/Login", new { area = "Identity" });
-            var item = await _productApi.GetProduct(productId);
-            await _basketApi.AddItem("test", new CartItem {ProductId = productId, Color = "Black", Price = item.Price,
-            Quantity = 1, ProductName = item.Name});
+            var product = await _catalogApi.GetProduct(productId);
+            
+            var item = new CartItem() {ProductId=product.Id, ProductName=product.Name, Quantity=1, Color="Red", Price=product.Price };
+            
+            await _basketApi.AddItem("test", item);
             return RedirectToPage("Cart");
         }
     }

@@ -47,12 +47,30 @@ namespace Basket.API.Controllers
             return Ok(await _repository.DeleteBasket(username));
         }
 
-        [HttpPost]
+        [HttpDelete]
+        public async Task<IActionResult> Delete_from_Basket_item(string username, BasketCartItem item_to_delete)
+        {
+            if (string.IsNullOrEmpty(username)) return BadRequest();
+            return Ok(await _repository.DeleteBasketItem(username, item_to_delete));
+        }
+
+        /*[HttpPost]
         [ProducesResponseType(typeof(BasketCart), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<BasketCart>> UpdateBasket([FromBody] BasketCart cart)
         {
             var updatedBasket = await _repository.UpdateBasket(cart);
             return Ok(updatedBasket);
+        }
+        */
+
+        [HttpPost]
+        [ProducesResponseType(typeof(BasketCart), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Add_To_Basket_Item(string username, BasketCartItem item_to_add)
+        {
+            if(string.IsNullOrEmpty(username)) return BadRequest();
+            var basket_that_receives = await _repository.AddBasketItem(username, item_to_add);
+            if (basket_that_receives == null) return StatusCode(500, "basket could not receive items");
+            return Ok(basket_that_receives);
         }
 
         [Route("[action]")]

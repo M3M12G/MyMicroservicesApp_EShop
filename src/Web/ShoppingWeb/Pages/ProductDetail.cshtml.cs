@@ -9,12 +9,12 @@ namespace ShoppingWeb.Pages
 {
     public class ProductDetailModel : PageModel
     {
-        private readonly IProductApi _productApi;
+        private readonly ICatalogApi _catalogApi;
         private readonly IBasketApi _basketApi;
 
-        public ProductDetailModel(IProductApi productApi, IBasketApi basketApi)
+        public ProductDetailModel(ICatalogApi catalogApi, IBasketApi basketApi)
         {
-            _productApi = productApi ?? throw new ArgumentNullException(nameof(productApi));
+            _catalogApi = catalogApi ?? throw new ArgumentNullException(nameof(catalogApi));
             _basketApi = basketApi ?? throw new ArgumentNullException(nameof(basketApi));
         }
 
@@ -32,7 +32,8 @@ namespace ShoppingWeb.Pages
             {
                 return NotFound();
             }
-            Product = await _productApi.GetProduct(productId);
+
+            Product = await _catalogApi.GetProduct(productId);
             if (Product == null)
             {
                 return NotFound();
@@ -44,17 +45,20 @@ namespace ShoppingWeb.Pages
         {
             //if (!User.Identity.IsAuthenticated)
             //    return RedirectToPage("./Account/Login", new { area = "Identity" });
-
-            Product = await _productApi.GetProduct(productId);
-            var item = new CartItem
+            if (!string.IsNullOrEmpty(productId))
             {
-                ProductId = productId,
-                Quantity = Quantity,
-                Color = Color,
-                ProductName = Product.Name,
-                Price = Product.Price
-            };
-            await _basketApi.AddItem("test", item);
+                var prod = await _catalogApi.GetProduct(productId);
+                var prod_item = new CartItem()
+                {
+                    ProductId = prod.Id,
+                    ProductName = prod.Name,
+                    Quantity = Quantity,
+                    Color = Color,
+                    Price = prod.Price
+                };
+                await _basketApi.AddItem("test", prod_item);
+            }
+
             return RedirectToPage("Cart");
         }
     }

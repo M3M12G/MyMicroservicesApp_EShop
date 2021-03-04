@@ -11,12 +11,13 @@ namespace ShoppingWeb.Pages
 {
     public class ProductModel : PageModel
     {
-        private readonly IProductApi _productApi;
-        private readonly IBasketApi _cartApi;
-        public ProductModel(IProductApi productApi, IBasketApi cartApi)
+        private readonly ICatalogApi _catalogApi;
+        private readonly IBasketApi _basketApi;
+
+        public ProductModel(ICatalogApi catalogApi, IBasketApi basketApi)
         {
-            _productApi = productApi ?? throw new ArgumentNullException(nameof(productApi));
-            _cartApi = cartApi ?? throw new ArgumentNullException(nameof(cartApi));
+            _catalogApi = catalogApi ?? throw new ArgumentNullException(nameof(catalogApi));
+            _basketApi = basketApi ?? throw new ArgumentNullException(nameof(basketApi));
         }
 
         public IEnumerable<string> CategoryList { get; set; } = new List<string>();
@@ -28,17 +29,17 @@ namespace ShoppingWeb.Pages
 
         public async Task<IActionResult> OnGetAsync(string categoryName)
         {
-
             if (!string.IsNullOrEmpty(categoryName))
             {
-                ProductList = await _productApi.GetProductByCategory(categoryName);
+                ProductList = await _catalogApi.GetProductByCategory(categoryName);
                 SelectedCategory = categoryName;
             }
             else
             {
-                ProductList = await _productApi.GetProducts();
-                CategoryList = ProductList.Select(p => p.Category).Distinct();
+                ProductList = await _catalogApi.GetProducts();
+                CategoryList = ProductList.Select(c => c.Category).Distinct().ToList();
             }
+
 
             return Page();
         }
@@ -47,15 +48,18 @@ namespace ShoppingWeb.Pages
         {
             //if (!User.Identity.IsAuthenticated)
             //    return RedirectToPage("./Account/Login", new { area = "Identity" });
-            var product = await _productApi.GetProduct(productId);
-            var item = new CartItem
+
+            var product = await _catalogApi.GetProduct(productId);
+            var item = new CartItem()
             {
                 ProductId = product.Id,
-                Price = product.Price,
                 ProductName = product.Name,
-                Quantity = 1
+                Quantity = 1,
+                Price = product.Price,
+                Color = "Red"
             };
-            await _cartApi.AddItem("test", item);
+
+            await _basketApi.AddItem("test", item);
             return RedirectToPage("Cart");
         }
     }

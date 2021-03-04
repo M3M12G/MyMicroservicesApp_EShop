@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using ShoppingWeb.API.Infrastructure;
 using ShoppingWeb.ApiCollection.Infrastructure;
 using ShoppingWeb.ApiCollection.Interfaces;
 using ShoppingWeb.ApiCollection.Settings;
@@ -20,6 +19,8 @@ namespace ShoppingWeb.ApiCollection.APIs
             _builder = new HttpRequestBuilder(_settings.BaseAddress);
             _builder.AddToPath(_settings.BasketPath);
         }
+
+        //Cart ~ BasketCart, CartItem ~ BasketCartItem
 
         public async Task<Cart> AddItem(string username, CartItem item)
         {

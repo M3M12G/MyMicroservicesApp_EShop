@@ -28,7 +28,7 @@ namespace ShoppingWeb
             services.AddSingleton<IApiSettings>(s => s.GetRequiredService<IOptions<ApiSettings>>().Value);
             #endregion
             #region API interfaces
-            services.AddTransient<IProductApi, ProductApi>();
+            services.AddTransient<ICatalogApi, CatalogApi>();
             services.AddTransient<IBasketApi, BasketApi>();
             services.AddTransient<IOrderingApi, OrderingApi>();
             #endregion

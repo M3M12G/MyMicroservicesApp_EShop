@@ -22,6 +22,7 @@ namespace ShoppingWeb.Pages
         public async Task<IActionResult> OnGetAsync()
         {
             Orders = await _orderApi.GetOrdersByUsername("test");
+
             return Page();
         }       
     }

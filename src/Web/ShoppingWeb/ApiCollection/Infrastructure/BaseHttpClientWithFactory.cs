@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 
-namespace ShoppingWeb.API.Infrastructure
+namespace ShoppingWeb.ApiCollection.Infrastructure
 {
     public abstract class BaseHttpClientWithFactory
     {
