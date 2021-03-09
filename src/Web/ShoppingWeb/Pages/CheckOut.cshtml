@@ -44,11 +44,12 @@
                 </li>
             </ul>
 
-            <form class="card p-2">
+            <form asp-page-handler="ActivatePromo" class="card p-2">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Promo code">
+                    <input asp-for="Code" type="text" class="form-control" name="promo_code" placeholder="Promo code" required>
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-secondary">Redeem</button>
+                        <span>@Model.Message</span>
                     </div>
                 </div>
             </form>

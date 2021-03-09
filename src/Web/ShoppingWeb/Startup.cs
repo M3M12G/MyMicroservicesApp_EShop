@@ -1,3 +1,4 @@
+using Grpc.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,9 @@ using Microsoft.Extensions.Options;
 using ShoppingWeb.ApiCollection.APIs;
 using ShoppingWeb.ApiCollection.Interfaces;
 using ShoppingWeb.ApiCollection.Settings;
+using ShoppingWeb.Discount_gRPC_Services;
+using ShoppingWeb.Helpers;
+using System;
 
 namespace ShoppingWeb
 {
@@ -27,11 +31,26 @@ namespace ShoppingWeb
             services.AddHttpClient();
             services.AddSingleton<IApiSettings>(s => s.GetRequiredService<IOptions<ApiSettings>>().Value);
             #endregion
+
+            #region AutoMapper settings
+            services.AddAutoMapper(x => x.AddProfile(new AutoMapperProfiles()));
+            #endregion
+
+            #region Discount gRPC settings
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+            services.AddGrpcClient<PromoDiscountService.PromoDiscountServiceClient>
+                        (o => { o.Address = new Uri(Configuration["gRPC_Settings:Discount_gRPC_URL"]);
+                            o.ChannelOptionsActions.Add(channelOptions => channelOptions.Credentials = ChannelCredentials.Insecure);
+                        });
+            services.AddScoped<DiscountPromogRPCService>();
+            #endregion
+
             #region API interfaces
             services.AddTransient<ICatalogApi, CatalogApi>();
             services.AddTransient<IBasketApi, BasketApi>();
             services.AddTransient<IOrderingApi, OrderingApi>();
             #endregion
+
             services.AddRazorPages();
         }
 

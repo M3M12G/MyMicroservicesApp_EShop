@@ -41,3 +41,12 @@ services:
       context: .
       dockerfile: src/Web/ShoppingWeb/Dockerfile
 
+  discountdb:
+    image: mongo
+
+  discount_grpc:
+    image: ${DOCKER_REGISTRY-}discountgrpc
+    build:
+      context: .
+      dockerfile: src/PromoService/Discount_gRPC/Dockerfile
+

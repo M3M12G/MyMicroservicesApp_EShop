@@ -93,6 +93,7 @@ services:
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - "ApiSettings:BaseAddress=http://apigateway:80"
+            - "gRPC_Settings:Discount_gRPC_URL=http://discount_grpc:80"
         depends_on:
             - catalog.api
             - basket.api
@@ -103,3 +104,21 @@ services:
             - ${HOME}/.aspnet/https:/root/.aspnet/https/
         ports:
             - "7007:80"
+    
+    discountdb:
+        container_name: discountdb
+        restart: always
+        volumes:
+            - ${WEBAPP_STORAGE_HOME}/site:/data/db/promo
+        ports:
+            - "27018:27017"
+            
+    discount_grpc:
+        container_name: discount_grpc
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - "PromoCodeDBSettings:ConnectionString=mongodb://discountdb:27018"
+        depends_on:
+            - discountdb
+        ports:
+            - "3333:80"

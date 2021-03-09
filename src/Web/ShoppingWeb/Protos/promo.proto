@@ -1,0 +1,73 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "ShoppingWeb";
+
+package promo;
+
+service PromoDiscountService{
+	rpc CreatePromo (PromoCreateRequest) returns (ExecutionStatusResponse);
+	rpc GeneratePromoCodes (GeneratePromoRequest) returns (ExecutionStatusResponse);
+	rpc ActivatePromoCode (ActivationPromoRequest) returns (ExecutionStatusResponse);
+	rpc DeletePromoCode (PromoCodeIdRequest) returns (ExecutionStatusResponse);
+	rpc DeleteInvalidPromos (DeleteInvalidPromosRequest) returns (ExecutionStatusResponse);
+	rpc GetPromoDetails (PromoCodeRequest) returns (PromoCodeResponse);
+	rpc GetPromoByTitle (PromoTitleRequest) returns (PromoListResponse);
+	rpc GetAllPromos (AllPromoRequest) returns (PromoListResponse);
+}
+
+message ExecutionStatusResponse{
+	bool status = 1;
+}
+
+message IsValidResponse{
+	bool valid = 1;
+}
+
+message AllPromoRequest{}
+
+message DeleteInvalidPromosRequest{}
+
+message PromoTitleRequest{
+	string Title = 1;
+}
+
+message PromoCodeIdRequest{
+	string Id = 1;
+}
+
+message ActivationPromoRequest{
+	string Code = 1;
+	string Username = 2;
+}
+
+message PromoCodeRequest{
+	string Code = 1;
+}
+
+message PromoCreateRequest{
+	string Title = 3;
+	google.protobuf.Timestamp ExpirationDate = 5;
+	double Discount = 6;
+}
+
+message GeneratePromoRequest{
+	int32 Quantity = 1;
+	string Title = 2;
+	google.protobuf.Timestamp ExpirationDate = 3;
+	double Discount = 4;
+}
+
+message PromoCodeResponse{
+	string Id = 1;
+	string Code = 2;
+	string Title = 3;
+	string Username = 4;
+	google.protobuf.Timestamp ExpirationDate = 5;
+	double Discount = 6;
+	bool IsValid = 7;
+}
+
+message PromoListResponse{
+	repeated PromoCodeResponse PromoCodes = 1;
+}
