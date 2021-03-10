@@ -100,7 +100,7 @@ namespace Discount_gRPC.Services
                     {
                         Code = PromoGenerator.GenerateCode(),
                         Title = request.Title,
-                        ExpirationDate = Convert.ToDateTime(request.ExpirationDate),
+                        ExpirationDate = request.ExpirationDate.ToDateTime(),
                         Discount = request.Discount
                     };
 
@@ -118,28 +118,25 @@ namespace Discount_gRPC.Services
 
             return genResult;
         }
-        public override async Task<ExecutionStatusResponse> ActivatePromoCode(ActivationPromoRequest request, ServerCallContext context)
+        public override async Task<ActivationPromoResponse> ActivatePromoCode(ActivationPromoRequest request, ServerCallContext context)
         {
-            var activationRes = new ExecutionStatusResponse()
-            {
-                Status = false
-            };
 
             try
             {
                 var promoFromDB = await _repository.GetPromoCode(request.Code);
-                if(promoFromDB != null)
+                if (promoFromDB != null)
                 {
-                    if(promoFromDB.IsValid && promoFromDB.ExpirationDate > DateTime.Now)
+                    if (promoFromDB.IsValid && promoFromDB.ExpirationDate > DateTime.Now)
                     {
                         promoFromDB.Username = request.Username;
                         promoFromDB.IsValid = false;
+
+                        if (await _repository.UpdateAsync(promoFromDB))
+                        {
+                            var promo_code = _mapper.Map<PromoCodeResponse>(promoFromDB);
+                            return new ActivationPromoResponse { Status = true, Promo = promo_code };
+                        }
                     }
-
-                    await _repository.UpdateAsync(promoFromDB);
-                    activationRes.Status = true;
-                    return activationRes;
-
                 }
             }
             catch(Exception e)
@@ -147,7 +144,7 @@ namespace Discount_gRPC.Services
                 _logger.LogError($"[PROMO-ACTIVATION]<>Some errors occured: {e.Message}");
             }
 
-            return activationRes;
+            return new ActivationPromoResponse { Status = false, Promo = new PromoCodeResponse { Code = request.Code} };
         }
 
         public override async Task<ExecutionStatusResponse> DeleteInvalidPromos(DeleteInvalidPromosRequest request, ServerCallContext context)

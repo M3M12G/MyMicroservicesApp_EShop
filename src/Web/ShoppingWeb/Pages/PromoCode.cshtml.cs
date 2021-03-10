@@ -21,20 +21,48 @@ namespace ShoppingWeb.Pages
             _logger = logger;
         }
         public IEnumerable<PromoCodeEntity> PromoCodes { get; set; } = new List<PromoCodeEntity>();
+        [BindProperty]
+        public PromoGenReqDTO genReqDTO { get; set; }
 
+        [BindProperty]
+        public string PromoTitle { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
             try
             {
                 PromoCodes = await _promoService.GetAllValidPromos();
-            } 
-            catch(Exception e)
+            }
+            catch (Exception e)
             {
                 _logger.LogError($"{e}");
             }
-            
+
 
             return Page();
         }
+
+        public async Task<IActionResult> OnPostGeneratePromos()
+        {
+            try
+            {
+                var calculated = genReqDTO.Discount / 100;
+                genReqDTO.Discount = calculated;
+                var dateFix = DateTime.SpecifyKind(genReqDTO.ExpirationDate, DateTimeKind.Utc);
+                genReqDTO.ExpirationDate = dateFix;
+                var gen_Result = await _promoService.GeneratePromoCodes(genReqDTO);
+
+                if (!gen_Result)
+                {
+                    return RedirectToPage("Index");
+                }
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"{e}");
+            }
+            return Page();
+        }
+
     }
 }

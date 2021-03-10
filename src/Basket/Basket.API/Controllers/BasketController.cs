@@ -51,14 +51,13 @@ namespace Basket.API.Controllers
             return Ok(await _repository.DeleteBasketItem(username, item_to_delete));
         }
 
-        /*[HttpPost]
+        [HttpPost("updateDiscountPrice")]
         [ProducesResponseType(typeof(BasketCart), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<BasketCart>> UpdateBasket([FromBody] BasketCart cart)
+        public async Task<ActionResult<BasketCart>> ApplyDiscountToBasket([FromBody] BasketCart cart)
         {
             var updatedBasket = await _repository.UpdateBasket(cart);
             return Ok(updatedBasket);
         }
-        */
 
         [HttpPost]
         [ProducesResponseType(typeof(BasketCart), (int)HttpStatusCode.OK)]

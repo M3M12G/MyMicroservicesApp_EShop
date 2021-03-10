@@ -18,20 +18,31 @@ namespace ShoppingWeb.Services_gRPC
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<bool> ActivatePromoCode(string username, string code)
+        public async Task<PromoCodeEntity> ActivatePromoCode(string username, string code)
         {
             var codeRequest = new ActivationPromoRequest { Code = code, Username = username };
 
             var res = await _discountService.ActivatePromoCodeAsync(codeRequest);
 
-            return res.Status;
+            if(res.Status)
+            {
+                var codeToReturn = res.Promo;
+                var promoCode = _mapper.Map<PromoCodeEntity>(codeToReturn);
+                return promoCode;
+            }
+
+            return null;
         }
 
         public async Task<bool> GeneratePromoCodes(PromoGenReqDTO genRequest)
         {
-            var requestToGen = new GeneratePromoRequest { Quantity = genRequest.Quantity, Title = genRequest.Title,
-                                                          ExpirationDate = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(genRequest.ExpirationDate),
-                                                          Discount = genRequest.Discount};
+            var requestToGen = new GeneratePromoRequest
+            {
+                Quantity = genRequest.Quantity,
+                Title = genRequest.Title,
+                ExpirationDate = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(genRequest.ExpirationDate),
+                Discount = genRequest.Discount
+            };
 
             var result = await _discountService.GeneratePromoCodesAsync(requestToGen);
 

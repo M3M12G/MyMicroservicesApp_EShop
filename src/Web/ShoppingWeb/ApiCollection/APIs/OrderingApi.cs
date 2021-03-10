@@ -29,6 +29,15 @@ namespace ShoppingWeb.ApiCollection.APIs
             await GetResponseStringAsync(message);
         }
 
+        public async Task<Cart> ApplyDiscountRequest(Cart basket)
+        {
+            _builder.SetPath(_settings.BasketPath).AddToPath("/ApplyDiscount");
+            using var message = _builder.Content(new StringContent(JsonConvert.SerializeObject(basket), Encoding.UTF8, "application/json"))
+                .HttpMethod(HttpMethod.Post)
+                .GetHttpMessage();
+            return await SendRequestAsync<Cart>(message);
+        }
+
         public async Task<IEnumerable<Order>> GetOrdersByUsername(string username)
         {
             using var message = _builder.AddQueryString("username", username)

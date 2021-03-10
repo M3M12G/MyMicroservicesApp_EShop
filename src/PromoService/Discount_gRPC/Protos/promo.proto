@@ -9,7 +9,7 @@ package promo;
 service PromoDiscountService{
 	rpc CreatePromo (PromoCreateRequest) returns (ExecutionStatusResponse);
 	rpc GeneratePromoCodes (GeneratePromoRequest) returns (ExecutionStatusResponse);
-	rpc ActivatePromoCode (ActivationPromoRequest) returns (ExecutionStatusResponse);
+	rpc ActivatePromoCode (ActivationPromoRequest) returns (ActivationPromoResponse);
 	rpc DeletePromoCode (PromoCodeIdRequest) returns (ExecutionStatusResponse);
 	rpc DeleteInvalidPromos (DeleteInvalidPromosRequest) returns (ExecutionStatusResponse);
 	rpc GetPromoDetails (PromoCodeRequest) returns (PromoCodeResponse);
@@ -67,4 +67,9 @@ message PromoCodeResponse{
 	google.protobuf.Timestamp ExpirationDate = 5;
 	double Discount = 6;
 	bool IsValid = 7;
+}
+
+message ActivationPromoResponse{
+	bool Status = 1;
+	PromoCodeResponse Promo = 2;
 }

@@ -12,6 +12,7 @@ namespace Discount_gRPC.Data
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
+
             Promocodes = database.GetCollection<PromoCode>(settings.CollectionName);
             DiscountContextSeed.SeedData(Promocodes);
         }

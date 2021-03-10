@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 using ShoppingWeb.ApiCollection.Interfaces;
 using ShoppingWeb.Models;
 using ShoppingWeb.Services_gRPC;
@@ -23,28 +24,52 @@ namespace ShoppingWeb.Pages
         [BindProperty]
         public Order Order { get; set; }
         public Cart Cart { get; set; }
-        public string Code { get; set; }
-        public string Message { get; set; }
+        [BindProperty]
+        public string Message { get; set; } = "Get discount Using Promo code";
+        [BindProperty]
+        public string InputPromo { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
             Cart = await _basketApi.GetCart("test");
             return Page();
         }
 
+        public async Task<IActionResult> OnGetWrongPromo()
+        {
+            Cart = await _basketApi.GetCart("test");
+            Message = "Your Promo Code is Invalid";
+            return Page();
+        }
+
         public async Task<IActionResult> OnPostActivatePromoAsync()
         {
-            if (!ModelState.IsValid)
+            var activated_promo = await _promoService.ActivatePromoCode("test", InputPromo);
+            
+            if (activated_promo == null)
             {
-                return Page();
+                return RedirectToPage("CheckOut", "WrongPromo");
+            }
+            
+            var discount = Convert.ToDecimal(activated_promo.Discount);
+
+            var user_basket = await _basketApi.GetCart("test");
+
+            foreach (var item in user_basket.Items)
+            {
+                var discount_price = item.Price * discount;
+                var new_price = item.Price - discount_price;
+                item.Price = new_price;
             }
 
-            if(await _promoService.ActivatePromoCode("test", Code))
+            var updatedCart = await _orderApi.ApplyDiscountRequest(user_basket);
+
+            if (updatedCart == null)
             {
-                Message = "Activated";
+                return RedirectToPage("CheckOut", "WrongPromo");
             }
 
-            Message = "Promocode is invalid";
-            return Page();
+            return RedirectToPage("Cart");
+            
         }
 
         public async Task<IActionResult> OnPostCheckOutAsync()

@@ -1,8 +1,6 @@
 ﻿@page
 @model CheckOutModel
-@{
-    ViewData["Title"] = "CheckOut";
-}
+@{ ViewData["Title"] = "CheckOut"; }
 
 <div class="container">
     <div class="row">
@@ -29,14 +27,13 @@
 
                 @foreach (var item in Model.Cart.Items)
                 {
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                            <h6 class="my-0">@item.ProductName: @item.Quantity</h6>
-                            <small class="text-muted">@item.Color</small>
-                        </div>
-                        <span class="text-muted">$@item.Price</span>
-                    </li>
-                }
+    <li class="list-group-item d-flex justify-content-between lh-condensed">
+        <div>
+            <h6 class="my-0">@item.ProductName: @item.Quantity</h6>
+            <small class="text-muted">@item.Color</small>
+        </div>
+        <span class="text-muted">$@item.Price</span>
+    </li>}
 
                 <li class="list-group-item d-flex justify-content-between">
                     <span>Total (USD)</span>
@@ -44,13 +41,21 @@
                 </li>
             </ul>
 
-            <form asp-page-handler="ActivatePromo" class="card p-2">
+            <form asp-page-handler="ActivatePromo" method="post" class="card p-2">
                 <div class="input-group">
-                    <input asp-for="Code" type="text" class="form-control" name="promo_code" placeholder="Promo code" required>
+                    <input type="text" asp-for="InputPromo" class="form-control" id="InputPromo" name="InputPromo" placeholder="Promo code" value="" required>
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-secondary">Redeem</button>
-                        <span>@Model.Message</span>
                     </div>
+                    <br />
+                    <hr />
+                    @if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        @Model.Message
+                </div>
+                    }
                 </div>
             </form>
         </div>

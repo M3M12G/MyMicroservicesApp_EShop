@@ -74,6 +74,18 @@
       "UpstreamPathTemplate": "/Basket/Checkout",
       "UpstreamHttpMethod": [ "Post" ]
     },
+    {
+      "DownstreamPathTemplate": "/api/v1/Basket/updateDiscountPrice",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "basket.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/Basket/ApplyDiscount",
+      "UpstreamHttpMethod": [ "Post" ]
+    },
     //Ordering API
     {
       "DownstreamPathTemplate": "/api/v1/Order",

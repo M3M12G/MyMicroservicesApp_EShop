@@ -8,5 +8,6 @@ namespace ShoppingWeb.ApiCollection.Interfaces
     {
         Task<IEnumerable<Order>> GetOrdersByUsername(string username);
         Task Checkout(Order order);
+        Task<Cart> ApplyDiscountRequest(Cart basket);
     }
 }

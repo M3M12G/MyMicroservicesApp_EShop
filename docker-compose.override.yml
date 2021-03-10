@@ -104,22 +104,14 @@ services:
             - ${HOME}/.aspnet/https:/root/.aspnet/https/
         ports:
             - "7007:80"
-    
-    discountdb:
-        container_name: discountdb
-        restart: always
-        volumes:
-            - ${WEBAPP_STORAGE_HOME}/site:/data/db/promo
-        ports:
-            - "27018:27017"
             
     discount_grpc:
         container_name: discount_grpc
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
-            - "PromoCodeDBSettings:ConnectionString=mongodb://discountdb:27018"
+            - "PromoCodeDBSettings:ConnectionString=mongodb://catalogdb:27017"
         depends_on:
-            - discountdb
+            - catalogdb
         volumes:
             - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
             - ${HOME}/.aspnet/https:/root/.aspnet/https/
