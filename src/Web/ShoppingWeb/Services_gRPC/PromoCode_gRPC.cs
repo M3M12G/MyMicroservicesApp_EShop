@@ -4,14 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ShoppingWeb.Discount_gRPC_Services
+namespace ShoppingWeb.Services_gRPC
 {
-    public class DiscountPromogRPCService
+    public class PromoCode_gRPC
     {
         private readonly PromoDiscountService.PromoDiscountServiceClient _discountService;
         private readonly IMapper _mapper;
 
-        public DiscountPromogRPCService(PromoDiscountService.PromoDiscountServiceClient discountService, IMapper mapper)
+        public PromoCode_gRPC(PromoDiscountService.PromoDiscountServiceClient discountService, IMapper mapper)
         {
             _discountService = discountService ?? throw new ArgumentNullException(nameof(discountService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));

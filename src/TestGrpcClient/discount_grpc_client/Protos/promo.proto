@@ -2,7 +2,7 @@ syntax = "proto3";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-option csharp_namespace = "Discount_gRPC";
+option csharp_namespace = "discount_grpc_client";
 
 package promo;
 

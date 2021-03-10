@@ -8,8 +8,8 @@ using Microsoft.Extensions.Options;
 using ShoppingWeb.ApiCollection.APIs;
 using ShoppingWeb.ApiCollection.Interfaces;
 using ShoppingWeb.ApiCollection.Settings;
-using ShoppingWeb.Discount_gRPC_Services;
 using ShoppingWeb.Helpers;
+using ShoppingWeb.Services_gRPC;
 using System;
 
 namespace ShoppingWeb
@@ -42,7 +42,7 @@ namespace ShoppingWeb
                         (o => { o.Address = new Uri(Configuration["gRPC_Settings:Discount_gRPC_URL"]);
                             o.ChannelOptionsActions.Add(channelOptions => channelOptions.Credentials = ChannelCredentials.Insecure);
                         });
-            services.AddScoped<DiscountPromogRPCService>();
+            services.AddTransient<PromoCode_gRPC>();
             #endregion
 
             #region API interfaces

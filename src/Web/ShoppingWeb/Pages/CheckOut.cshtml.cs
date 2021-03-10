@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ShoppingWeb.ApiCollection.Interfaces;
-using ShoppingWeb.Discount_gRPC_Services;
 using ShoppingWeb.Models;
+using ShoppingWeb.Services_gRPC;
 
 namespace ShoppingWeb.Pages
 {
@@ -12,8 +12,8 @@ namespace ShoppingWeb.Pages
     {
         private readonly IBasketApi _basketApi;
         private readonly IOrderingApi _orderApi;
-        private readonly DiscountPromogRPCService _promoService;
-        public CheckOutModel(IBasketApi basketApi, IOrderingApi orderApi, DiscountPromogRPCService promoService)
+        private readonly PromoCode_gRPC _promoService;
+        public CheckOutModel(IBasketApi basketApi, IOrderingApi orderApi, PromoCode_gRPC promoService)
         {
             _basketApi = basketApi ?? throw new ArgumentNullException(nameof(basketApi));
             _orderApi = orderApi ?? throw new ArgumentNullException(nameof(orderApi));

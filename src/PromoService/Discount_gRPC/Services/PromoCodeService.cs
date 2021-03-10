@@ -23,6 +23,40 @@ namespace Discount_gRPC.Services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        public override async Task GetAllPromos(AllPromoRequest request, IServerStreamWriter<PromoCodeResponse> responseStream, ServerCallContext context)
+        {
+            var allValidPromos = await _repository.GetAllValidPromocodesAsync();
+            
+            if(allValidPromos != null)
+            {
+                foreach(var singlePromo in allValidPromos)
+                {
+                    var promo = _mapper.Map<PromoCodeResponse>(singlePromo);
+
+                    await responseStream.WriteAsync(promo);
+                }
+                
+            }
+        }
+
+        public override async Task GetPromoByTitle(PromoTitleRequest request, IServerStreamWriter<PromoCodeResponse> responseStream, ServerCallContext context)
+        {
+            var promoForTitle = await _repository.GetPromocodesByTitleAsync(request.Title);
+
+            if(promoForTitle == null)
+            {
+                _logger.LogWarning($"[PROMO-NOT FOUND]<>Not found any promo for {request.Title}");
+                return;
+            }
+
+            foreach(var promo in promoForTitle)
+            {
+                var pT = _mapper.Map<PromoCodeResponse>(promo);
+
+                await responseStream.WriteAsync(pT);
+            }
+        }
+
         public override async Task<ExecutionStatusResponse> CreatePromo(PromoCreateRequest request, ServerCallContext context)
         {
             var toSaveCode = new PromoCode()
@@ -114,38 +148,6 @@ namespace Discount_gRPC.Services
             }
 
             return activationRes;
-        }
-
-        public override async Task<PromoListResponse> GetAllPromos(AllPromoRequest request, ServerCallContext context)
-        {
-            var validPromos = await _repository.GetAllValidPromocodesAsync();
-            if (validPromos != null)
-            {
-                var toReturnListPC = _mapper.Map<List<PromoCodeResponse>>(validPromos);
-
-                var codes = new PromoListResponse();
-                codes.PromoCodes.Add(toReturnListPC);
-                return codes;
-            }
-
-            return null;
-        }
-
-        public override async Task<PromoListResponse> GetPromoByTitle(PromoTitleRequest request, ServerCallContext context)
-        {
-            var promosForTitle = await _repository.GetPromocodesByTitleAsync(request.Title);
-
-            if(promosForTitle != null)
-            {
-                var toReturnPCs = _mapper.Map<List<PromoCodeResponse>>(promosForTitle);
-
-                var promocs = new PromoListResponse();
-                promocs.PromoCodes.Add(toReturnPCs);
-                return promocs;
-            }
-
-            return null;
-
         }
 
         public override async Task<ExecutionStatusResponse> DeleteInvalidPromos(DeleteInvalidPromosRequest request, ServerCallContext context)
