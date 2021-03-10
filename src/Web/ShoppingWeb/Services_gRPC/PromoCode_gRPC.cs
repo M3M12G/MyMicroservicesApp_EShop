@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Grpc.Core;
 using ShoppingWeb.Models;
 using System;
 using System.Collections.Generic;
@@ -37,17 +38,38 @@ namespace ShoppingWeb.Services_gRPC
             return result.Status;
         }
 
-        public async Task<IEnumerable<PromoCodeEntity>> GetAllPromoCodes()
+        public async Task<IEnumerable<PromoCodeEntity>> GetAllValidPromos()
         {
-            var promos = await _discountService.GetAllPromosAsync(new AllPromoRequest { });
-            
-            if(promos.PromoCodes.Count > 0)
+            ICollection<PromoCodeEntity> promosToReturn = new LinkedList<PromoCodeEntity>();
+
+            using (var call = _discountService.GetAllPromos(new AllPromoRequest { }))
             {
-                var promosToReturns = _mapper.Map<IEnumerable<PromoCodeEntity>>(promos.PromoCodes);
-                return promosToReturns;
+                while (await call.ResponseStream.MoveNext())
+                {
+                    var promoCodeMsg = call.ResponseStream.Current;
+                    var mapped_pc = _mapper.Map<PromoCodeEntity>(promoCodeMsg);
+                    promosToReturn.Add(mapped_pc);
+                }
             }
 
-            return null;
+            return promosToReturn;
+        }
+
+        public async Task<IEnumerable<PromoCodeEntity>> GetPromosByTitle(string title)
+        {
+            ICollection<PromoCodeEntity> promosByTitle = new LinkedList<PromoCodeEntity>();
+
+            using (var call = _discountService.GetPromoByTitle(new PromoTitleRequest { Title = title }))
+            {
+                while (await call.ResponseStream.MoveNext())
+                {
+                    var promoCodeMsg = call.ResponseStream.Current;
+                    var mapped_pc = _mapper.Map<PromoCodeEntity>(promoCodeMsg);
+                    promosByTitle.Add(mapped_pc);
+                }
+            }
+
+            return promosByTitle;
         }
     }
 }

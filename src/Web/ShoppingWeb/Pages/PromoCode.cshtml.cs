@@ -26,7 +26,7 @@ namespace ShoppingWeb.Pages
         {
             try
             {
-                PromoCodes = await _promoService.GetAllPromoCodes();
+                PromoCodes = await _promoService.GetAllValidPromos();
             } 
             catch(Exception e)
             {

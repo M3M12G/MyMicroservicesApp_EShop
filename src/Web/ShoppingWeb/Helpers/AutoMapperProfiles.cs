@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ShoppingWeb.Models;
+using System;
 
 namespace ShoppingWeb.Helpers
 {
@@ -7,7 +8,9 @@ namespace ShoppingWeb.Helpers
     {
         public AutoMapperProfiles()
         {
-            CreateMap<PromoCodeResponse, PromoCodeEntity>().ReverseMap();
+            CreateMap<PromoCodeResponse, PromoCodeEntity>()
+                .ForMember(pc => pc.ExpirationDate,
+                opt => opt.MapFrom(src => src.ExpirationDate.ToDateTime()));
         }
     }
 }

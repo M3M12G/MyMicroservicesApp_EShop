@@ -42,10 +42,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PromoService", "PromoServic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discount_gRPC", "src\PromoService\Discount_gRPC\Discount_gRPC.csproj", "{F1C16C9C-AEE0-4169-8D0C-A7A06D8AD4E8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestGrpcClient", "TestGrpcClient", "{CBF36DB0-9E62-46C6-A2F5-37550BD31053}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "discount_grpc_client", "src\TestGrpcClient\discount_grpc_client\discount_grpc_client.csproj", "{32EAD498-221E-4548-8F0B-DA1C39592A61}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,10 +88,6 @@ Global
 		{F1C16C9C-AEE0-4169-8D0C-A7A06D8AD4E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1C16C9C-AEE0-4169-8D0C-A7A06D8AD4E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1C16C9C-AEE0-4169-8D0C-A7A06D8AD4E8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{32EAD498-221E-4548-8F0B-DA1C39592A61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{32EAD498-221E-4548-8F0B-DA1C39592A61}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{32EAD498-221E-4548-8F0B-DA1C39592A61}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{32EAD498-221E-4548-8F0B-DA1C39592A61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,8 +109,6 @@ Global
 		{76ADF451-EA69-4A6A-9A51-AF525930B5CF} = {AE63E540-1CBB-43B5-A6A8-AE431E270D5B}
 		{43A96601-3A9A-4183-8B04-E1ED00041318} = {32C2A2B2-FA79-451E-A13C-8FE80BCCCB5C}
 		{F1C16C9C-AEE0-4169-8D0C-A7A06D8AD4E8} = {43A96601-3A9A-4183-8B04-E1ED00041318}
-		{CBF36DB0-9E62-46C6-A2F5-37550BD31053} = {32C2A2B2-FA79-451E-A13C-8FE80BCCCB5C}
-		{32EAD498-221E-4548-8F0B-DA1C39592A61} = {CBF36DB0-9E62-46C6-A2F5-37550BD31053}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6161B798-ED0E-4B0D-9F6E-911EBA23E810}

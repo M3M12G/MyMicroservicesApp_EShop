@@ -1,5 +1,6 @@
 syntax = "proto3";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 option csharp_namespace = "ShoppingWeb";
 
@@ -12,8 +13,8 @@ service PromoDiscountService{
 	rpc DeletePromoCode (PromoCodeIdRequest) returns (ExecutionStatusResponse);
 	rpc DeleteInvalidPromos (DeleteInvalidPromosRequest) returns (ExecutionStatusResponse);
 	rpc GetPromoDetails (PromoCodeRequest) returns (PromoCodeResponse);
-	rpc GetPromoByTitle (PromoTitleRequest) returns (PromoListResponse);
-	rpc GetAllPromos (AllPromoRequest) returns (PromoListResponse);
+	rpc GetPromoByTitle (PromoTitleRequest) returns (stream PromoCodeResponse);
+	rpc GetAllPromos (AllPromoRequest) returns (stream PromoCodeResponse);
 }
 
 message ExecutionStatusResponse{
@@ -62,12 +63,8 @@ message PromoCodeResponse{
 	string Id = 1;
 	string Code = 2;
 	string Title = 3;
-	string Username = 4;
+	google.protobuf.StringValue Username = 4;
 	google.protobuf.Timestamp ExpirationDate = 5;
 	double Discount = 6;
 	bool IsValid = 7;
-}
-
-message PromoListResponse{
-	repeated PromoCodeResponse PromoCodes = 1;
 }
